@@ -34,9 +34,9 @@ public class Cmnpageobjects {
 			private By SearchList=By.xpath("//div[@id='block_top_menu']/ul/li"); 
 			private By SearchProdListDress=By.xpath("//div[@class='ac_results']//li");
 			private By twitterlink=By.xpath("/html/body/div/div[3]/footer/div/section[1]/ul/li[2]/a");
-			//private By TwitterAccName= By.xpath("//div[@class='css-1dbjc4n r-6gpygo r-14gqq1x']//span/span");
+			private By TwitterAccName= By.xpath("//div[@class='css-1dbjc4n r-6gpygo r-14gqq1x']//span/span");
 			
-			private By TwitterAccName=By.xpath("//div[@dir='auto']//span[text()='Selenium Framework'])[1]");
+			//private By TwitterAccName=By.xpath("//div[@dir='auto']//span[text()='Selenium Framework'])[1]");
 			private By emailBox=By.xpath("//input[@id='newsletter-input']");
 			private By sendBtn=By.xpath("//button[@name='submitNewsletter']");
 			private By succesefulSubMsg=By.xpath("//p[@class='alert alert-success']");
@@ -150,23 +150,43 @@ public class Cmnpageobjects {
 		
 		public void clickOnTwitterLink() 
 		{
-			WebElement twitterlogo =driver.findElement(twitterlink);
-	    	twitterlogo.click();
-	    	logger.info("Click the twitter link");
-	    	scn.log("Click the twitter link");
+//			WebElement twitterlogo =driver.findElement(twitterlink);
+//	    	twitterlogo.click();
+//	    	logger.info("Click the twitter link");
+//	    	scn.log("Click the twitter link");s
+			
+			WebElement twitterElement=driver.findElement(twitterlink);
+			 logger.info("Created webElement for twiter");
+			 twitterElement.click();
+			   logger.info("Click on twitter logo");
+			   
 		}
 		
 		
 		public void twitterAcctPage()
 		{
 			
-	    	logger.info("Switch to Twitter Account window");
-	    	wait= new WebDriverWait(driver, 20);
-	    	boolean p =wait.until(ExpectedConditions.titleIs("Selenium Framework (@seleniumfrmwrk) / Twitter"));
-	    	Assert.assertEquals(true, p);
-	    	logger.info("Validate twitter account page with its title, title is: "+ ("Selenium Framework (@seleniumfrmwrk) / Twitter"));
-	    	scn.log("navigate to twitter account page, page title is: "+("Selenium Framework (@seleniumfrmwrk) / Twitter") );
+//	    	logger.info("Switch to Twitter Account window");
+//	    	wait= new WebDriverWait(driver, 20);
+//	    	boolean p =wait.until(ExpectedConditions.titleIs("Selenium Framework (@seleniumfrmwrk) / Twitter"));
+//	    	Assert.assertEquals(true, p);
+//	    	logger.info("Validate twitter account page with its title, title is: "+ ("Selenium Framework (@seleniumfrmwrk) / Twitter"));
+//	    	scn.log("navigate to twitter account page, page title is: "+("Selenium Framework (@seleniumfrmwrk) / Twitter") );
+			
+			Set<String> handles = driver.getWindowHandles(); // get all the open windows
+		     Iterator<String> it = handles.iterator(); // get the iterator to iterate the elements in set
+		     String landingpage = it.next();//gives the parent window id
+		     String twiterpage = it.next();
+		     driver.switchTo().window(twiterpage);
+		    logger.info("Window switched to twitter page");
+		    
+		    WebElement TwitterAccountElement=driver.findElement(TwitterAccName);
+		    logger.info("Created WebElement for Twitter Account name");
+		    Assert.assertEquals("Selenium Framework", TwitterAccountElement.getText());
+		    scn.log("Twitter Account name is :" + TwitterAccountElement.getText() );
+		    logger.info("Twitter Account name is :" + TwitterAccountElement.getText());
 		}
+		
 		
 		
 		public void newsLetterTxBox()
