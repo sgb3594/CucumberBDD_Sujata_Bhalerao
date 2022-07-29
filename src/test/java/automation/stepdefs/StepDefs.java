@@ -1,5 +1,7 @@
 package automation.stepdefs;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -44,22 +46,22 @@ public class StepDefs {
 	}
 		
 
-//		@After(order=2)
-//		//Capture screenshot if test case get failed
-//		public void captureScreenshot(Scenario scn)
-//		{
-//			if(scn.isFailed())
-//			{
-//				TakesScreenshot srnshot= ((TakesScreenshot)driver);
-//				byte [] data =srnshot.getScreenshotAs(OutputType.BYTES);
-//				scn.attach(data, "image/png", "Name of failed step is: "+ scn.getName());
-//				scn.log("Attach a screenshot as step get failed");
-//			}
-//			else
-//			{
-//				scn.log("Test case get passed, no screenshot is captured");
-//			}
-//		}
+		@After(order=2)
+		//Capture screenshot if test case got failed
+		public void captureScreenshot(Scenario scn)
+		{
+			if(scn.isFailed())
+			{
+				TakesScreenshot srnshot= ((TakesScreenshot)driver);
+				byte [] data =srnshot.getScreenshotAs(OutputType.BYTES);
+				scn.attach(data, "image/png", "Name of failed step is: "+ scn.getName());
+				scn.log("Attach a screenshot as step get failed");
+			}
+			else
+			{
+				scn.log("Test case get passed, no screenshot is captured");
+			}
+		}
 
 		@After(order=1)
 		public void cleanUp(){
@@ -79,36 +81,60 @@ public class StepDefs {
 //	  
 //	}
 
+		@Given("User navigated to home application Url")
+		public void user_navigated_to_home_application_url()
+		{
+			 driver.get(Base_Url); 
+			   
+			   scn.log("Browser navigated to URL :" + Base_Url);
+			   logger.info("Browser navigated to URL :" + Base_Url);
+			  
+		}
+
+
+		@When("User is on landing page")
+		public void user_is_on_landing_page()
+		{
+			logger.info("User is on landing page after navigating to base URL");
+		    scn.log("User is on landing page after navigating to base URL");
+		}
+		
+		@Then("Validate current URL of landing page with expected URL")
+		public void validate_current_url_of_landing_page_with_expected_url()
+		{
+			cmnPageObjects.URLvalidationTest();
+		}
+
 
 	
-	
-	@Given("User navigated to home application Url")
-	public void user_navigated_to_home_application_url()
-	{
-		 driver.get(Base_Url); 
-		   
-		   scn.log("Browser navigated to URL :" + Base_Url);
-		   logger.info("Browser navigated to URL :" + Base_Url);
-		  
-	}
-
-	@Given("Landing page URL is validated")
-	public void landing_page_url_is_validated() 
-	{
-		 cmnPageObjects.URLvalidationTest();
-	}
 
 	@Given("Landing page expected title is {string}")
 	public void landing_page_expected_title_is(String string)
 	{
 		cmnPageObjects.landingPagetitleValidation();
 	}
+
+	@When("User see the product category")
+	public void user_see_the_product_category()
+	{
+		cmnPageObjects.productCategoryList();
+		
+	}
 	
-  @Then("Product catagory are displayed")
-  public void product_catagory_are_displayed()
-      {
-          cmnPageObjects.Catagorydisplaytest();
-      }
+
+	@When("Validate product category as per expected product category list")
+	public void validate_product_category_as_per_expected_product_category_list(List<String> prodList)
+	{
+		cmnPageObjects.validateProdCategory(prodList);
+	}
+	
+	@Then("Size of product category should be {int}")
+	public void size_of_product_category_should_be(Integer prodCount)
+	{
+		cmnPageObjects.countOfProdCategory(prodCount);
+	}
+
+
 
   
  
@@ -163,12 +189,18 @@ public class StepDefs {
 	 cmnPageObjects.productList();
   }
 
-  @Then("User validate the number of product available with result {string}")
-  public void user_validate_the_number_of_product_available_with_result(String string) 
+//  @Then("User validate the number of product available with result {string}")
+//  public void user_validate_the_number_of_product_available_with_result(String string) 
+//  {
+//	  cmnPageObjects.productCountResult(String string); 
+//  }
+  
+  @Then("User validate the number of product count {int}")
+  public void user_validate_the_number_of_product_count(Integer int1) 
   {
 	  cmnPageObjects.productCountResult();
   }
-
+  
   @Given("User clicked on twitter link")
   public void user_clicked_on_twitter_link() 
   {

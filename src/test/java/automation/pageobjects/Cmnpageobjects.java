@@ -31,7 +31,7 @@ public class Cmnpageobjects {
 	       // private By LogoImg=By.xpath("//img[@class='logo img-responsive']");
 			private By SignInBtn=By.xpath("//a[@class='login']");
 			private By SearchBox=By.xpath("//input[@placeholder='Search']");
-			private By SearchList=By.xpath("//div[@id='block_top_menu']/ul/li"); 
+			private By productsList=By.xpath("//div[@id='block_top_menu']/ul/li"); 
 			private By SearchProdListDress=By.xpath("//div[@class='ac_results']//li");
 			private By twitterlink=By.xpath("/html/body/div/div[3]/footer/div/section[1]/ul/li[2]/a");
 			private By TwitterAccName= By.xpath("//div[@class='css-1dbjc4n r-6gpygo r-14gqq1x']//span/span");
@@ -71,15 +71,47 @@ public class Cmnpageobjects {
 				  logger.info("Title validation successful. Actual Title :" + driver.getTitle());
 			}
 
+			   public void productCategoryList()
+			    {
+			    	List <WebElement> prodCategoryList =driver.findElements(productsList);
+			    	Assert.assertEquals(false, prodCategoryList.isEmpty());
+			    	logger.info("Display the product category list,count of list is: "+ prodCategoryList.size());
+			    	scn.log("Product category is displayed on page with count : "+ prodCategoryList.size());
+			    }
+			    
+	
+			    public void validateProdCategory(List<String> prodList)
+			    {
+			    	List <WebElement> prodCategoryList =driver.findElements(productsList);
+			    	{
+			    		for(int i=0; i< prodCategoryList.size(); i++)
+			    		{
+			    			if(prodCategoryList.get(i).getText().equals(prodList.get(i).toString()))
+			        		{
+			        			Assert.assertTrue(true);
+			        			logger.info(prodCategoryList.get(i).getText()+ " is matched with expected "+ prodList.get(i).toString());
+			        		}
+			    			else
+			    			{
+			    				Assert.fail();
+			        			logger.fatal(prodCategoryList.get(i).getText()+ " is not matched with expected "+ prodList.get(i).toString());
+			    			}
+			    		}
+			    		logger.info("Validate the product category with expected datatable");
+			    	}
+			    }	
+
+			
+			   public void countOfProdCategory(int prodCount)
+			   {
+				   List <WebElement> prodCategoryList =driver.findElements(productsList);
+				   Assert.assertEquals(prodCount, prodCategoryList.size());
+				   logger.info("validate the Size of product category, size is: "+ prodCategoryList.size());
+				   scn.log("validate the Size of product category, size is: "+ prodCategoryList.size());
+			   }
+			   
 			
 			
-			public void Catagorydisplaytest()
-			{
-				List <WebElement> prodCategoryList =driver.findElements(SearchList);
-		    	Assert.assertEquals(false, prodCategoryList.isEmpty());
-		    	logger.info("Display the product category list, size of list is: "+ prodCategoryList.size());
-		    	scn.log("Product category is displayed on page with size is: "+ prodCategoryList.size());
-			}
 			
 			public void logoDisplayTest()
 			{
@@ -90,8 +122,8 @@ public class Cmnpageobjects {
 			}
 			public void logHeighTtest()
 			{
-				WebElement LogoImageElement=driver.findElement(LogoImg);
-			    Assert.assertEquals("99",LogoImageElement.getAttribute("height"));
+				WebElement ExeLogoHeight=driver.findElement(LogoImg);
+			    Assert.assertEquals("99",ExeLogoHeight.getAttribute("height"));
 			    scn.log("Landing page logo height is 99");
 			    logger.info("Landing page logo height is 99");	
 			}
@@ -99,9 +131,9 @@ public class Cmnpageobjects {
 			public void logoWidthTest()
 			{
 				
-				String ExpLogoWidth   ="350";
-				WebElement LogoImageElement=driver.findElement(LogoImg);
-		        Assert.assertEquals("350",LogoImageElement.getAttribute("width"));
+				//String ExpLogoWidth   ="350";
+				WebElement ExpLogoWidth=driver.findElement(LogoImg);
+		        Assert.assertEquals("350",ExpLogoWidth.getAttribute("width"));
 				 scn.log("Landing page logo width is 350");
 				 logger.info("Landing page logo width is 350");	
 			}
@@ -109,8 +141,6 @@ public class Cmnpageobjects {
 			public void clickOnsigninBtn()
 			{
 				WebElement signIn =driver.findElement(SignInBtn);
-//				driver.findElement(SignInBtn).click();
-//				logger.info("Clicked on sign in button");
 				wait= new WebDriverWait(driver,20);
 		    	wait.until(ExpectedConditions.elementToBeClickable(signIn));
 		    	signIn.click();
@@ -126,7 +156,7 @@ public class Cmnpageobjects {
 			
 			public void searchForProductDress()
 			{
-				List<WebElement> allProduct = driver.findElements(SearchList);
+				List<WebElement> allProduct = driver.findElements(SearchProdListDress); //SearchProdListDress
 				System.out.println(allProduct.size());
 		        logger.info("Number of products searched: " + allProduct.size());
 			}
@@ -139,21 +169,36 @@ public class Cmnpageobjects {
 			 scn.log("Search box is enabled");
 			 logger.info("Search box is enabled");
 			 SearchBoxElement.sendKeys("Dress"); 
-			 logger.info("Sent product name in searchbox");
+			 logger.info("Sent product Dress in searchbox");
 		}
 
 		public void productCountResult() 
 		{
+			int count=0;
 			List<WebElement>ResultCount=driver.findElements(SearchProdListDress);
 			System.out.println(ResultCount.size());
+			
+			logger.info(" list of suggested products contains product name as: ");
+	    	scn.log("Validate the list of suggested products ");
+	        for(int i=0; i< ResultCount.size(); i++)
+	    	{
+	    		if(ResultCount.get(i).getText().contains(SearchProdListDress.toString()))
+	    		{
+	    			Assert.assertEquals(true,ResultCount.get(i).getText().contains(SearchProdListDress.toString()));
+	    			logger.info(ResultCount.get(i).getText());
+	        		scn.log(i+1 +". "+ ResultCount.get(i).getText());
+	        		count++;
+	        	}
+	    	}
+	        
+	    
+	    	logger.info("Total number of product is: "+ count);
+	    	scn.log("Total number of product is: "+ count);
+	    	
 		}
 		
 		public void clickOnTwitterLink() 
 		{
-//			WebElement twitterlogo =driver.findElement(twitterlink);
-//	    	twitterlogo.click();
-//	    	logger.info("Click the twitter link");
-//	    	scn.log("Click the twitter link");s
 			
 			WebElement twitterElement=driver.findElement(twitterlink);
 			 logger.info("Created webElement for twiter");
@@ -166,14 +211,7 @@ public class Cmnpageobjects {
 		public void twitterAcctPage()
 		{
 			
-//	    	logger.info("Switch to Twitter Account window");
-//	    	wait= new WebDriverWait(driver, 20);
-//	    	boolean p =wait.until(ExpectedConditions.titleIs("Selenium Framework (@seleniumfrmwrk) / Twitter"));
-//	    	Assert.assertEquals(true, p);
-//	    	logger.info("Validate twitter account page with its title, title is: "+ ("Selenium Framework (@seleniumfrmwrk) / Twitter"));
-//	    	scn.log("navigate to twitter account page, page title is: "+("Selenium Framework (@seleniumfrmwrk) / Twitter") );
-			
-			Set<String> handles = driver.getWindowHandles(); // get all the open windows
+			Set<String> handles = driver.getWindowHandles(); 
 		     Iterator<String> it = handles.iterator(); // get the iterator to iterate the elements in set
 		     String landingpage = it.next();//gives the parent window id
 		     String twiterpage = it.next();
@@ -192,8 +230,6 @@ public class Cmnpageobjects {
 		public void newsLetterTxBox()
 		{
 			WebElement newsLetterTxBox = driver.findElement(emailBox);
-		//WebElement newsLetterTextBox =driver.findElement(newsLetterElement);
-		
 		}	
 		
 		public void enterEmailId()
@@ -205,43 +241,7 @@ public class Cmnpageobjects {
 	    }
 
 
-	   
-//		public class RandomNumberGeneratorUtil {
-//			
-//			public int randomNumberGengerator_000_00()
-//			{
-//				Random rand = new Random();
-//				int random_integer = rand.nextInt(99999);
-//				return random_integer;
-//			}
-//			
-//			public int randomNumberGengerator_00()
-//			{
-//				Random rand = new Random();
-//				int random_integer = rand.nextInt(9);
-//				return random_integer;
-//			}
-//			
-//			public String randomStringGenerator()
-//			{
-//				Random rand = new Random();
-//				String randomName = "";
-//				
-//				for (int i = 0; i < 10; i++) 
-//				{
-//					char characterRandom = (char)(rand.nextInt(26)+97);
-//					if (rand.nextBoolean()) 
-//					{
-//						characterRandom = Character.toUpperCase(characterRandom);
-//						randomName = randomName + characterRandom;
-//					}	
-//				}	
-//				return randomName;
-//			}
-//			
-//		}	
-		
-		 public void clickOnProceedBtn()
+	    public void clickOnProceedBtn()
 		       {
 		    	WebElement proceedButton= driver.findElement(sendBtn);
 		    	proceedButton.click();
